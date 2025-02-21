@@ -1,0 +1,41 @@
+name: absensi_app
+description: Aplikasi absensi mobile untuk SMKN 1 Punggelan
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  provider: ^6.0.5
+  dio: ^5.3.2
+  shared_preferences: ^2.2.1
+  image_picker: ^1.0.4
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  path_provider: ^2.1.1
+  intl: ^0.18.1
+  geolocator: ^10.1.0
+  cached_network_image: ^3.2.3
+  flutter_cache_manager: ^3.3.1
+  google_ml_kit: ^0.16.2
+  camera: ^0.10.5+4
+  logging: ^1.2.0
+  image: ^4.1.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+  build_runner: ^2.4.6
+  hive_generator: ^2.0.1
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/

@@ -2,27 +2,45 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:hive/hive.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_ml_kit/google_ml_kit.dart';
 import '../models/attendance_model.dart';
 import '../models/offline_attendance.dart';
 import '../../core/network/dio_client.dart';
 import '../../core/services/image_processor.dart';
 import '../exceptions/attendance_exception.dart';
 import '../../core/services/logging_service.dart';
+import '../services/face_recognition_service.dart';
 
 class AttendanceRepository {
   final DioClient _client;
   final HiveInterface _hive;
+  final FaceRecognitionService _faceRecognitionService;
 
   AttendanceRepository({
     DioClient? client,
     HiveInterface? hive,
+    FaceRecognitionService? faceRecognitionService,
   }) : _client = client ?? DioClient(),
-       _hive = hive ?? Hive;
+       _hive = hive ?? Hive,
+       _faceRecognitionService = faceRecognitionService ?? FaceRecognitionService();
 
-  Future<void> submitAttendance(File photo, Position location) async {
+  Future<void> submitAttendance(File photo, Position location, {InputImage? referenceImage}) async {
     try {
       // Process photo for optimal quality and size
       final processedPhoto = await ImageProcessor.processAttendancePhoto(photo);
+
+      // Verify face if reference image is provided
+      if (referenceImage != null) {
+        final currentImage = InputImage.fromFile(processedPhoto);
+        final similarity = await _faceRecognitionService.compareFaces(
+          currentImage,
+          referenceImage,
+        );
+
+        if (similarity < 0.7) { // Threshold for face matching
+          throw AttendanceException('Face verification failed: Face does not match reference image');
+        }
+      }
 
       // Create form data for API request
       final formData = FormData.fromMap({
@@ -31,6 +49,7 @@ class AttendanceRepository {
         'longitude': location.longitude,
         'accuracy': location.accuracy,
         'timestamp': DateTime.now().toIso8601String(),
+        'face_verified': referenceImage != null,
       });
 
       // Send to server

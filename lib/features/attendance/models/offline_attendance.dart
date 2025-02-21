@@ -34,13 +34,6 @@ class OfflineAttendance extends HiveObject {
       timestamp: timestamp ?? this.timestamp,
       isProcessed: isProcessed ?? this.isProcessed,
     );
-
-    return OfflineAttendance(
-      photoPath: photoPath ?? this.photoPath,
-      location: location ?? this.location,
-      timestamp: timestamp ?? this.timestamp,
-      isProcessed: isProcessed ?? this.isProcessed,
-    );
   }
 
   Map<String, dynamic> toJson() {

@@ -16,8 +16,8 @@ class LocationValidationService {
       // Check if user is within allowed radius
       return distance <= _defaultRadius;
     } catch (e) {
-      // Log error and return false for safety
-      print('Location validation error: $e');
+      // Log error with relevant details while protecting sensitive data
+      print('Location validation error: ${e.toString()} - Validation failed for coordinates check');
       return false;
     }
   }

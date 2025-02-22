@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:absensi_app/features/home/presentation/screens/home_screen.dart';
+import '../../services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -28,31 +29,31 @@ class _LoginScreenState extends State<LoginScreen> {
         _isLoading = true;
       });
 
-      // Simulating API call with a delay
-      await Future.delayed(const Duration(seconds: 2));
+      try {
+        await AuthService().login(
+          _emailController.text.trim(),
+          _passwordController.text,
+        );
 
-      // For demo purposes, we'll use hardcoded credentials
-      // In a real app, this should be replaced with actual API authentication
-      if (_emailController.text == 'melisa@skansa.com' && _passwordController.text == '123456') {
-        // Navigate to home screen
         if (!mounted) return;
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => const HomeScreen()),
         );
-      } else {
-        // Show error message
+      } catch (e) {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Email atau password salah'),
+          SnackBar(
+            content: Text(e.toString()),
             backgroundColor: Colors.red,
           ),
         );
+      } finally {
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
       }
-
-      setState(() {
-        _isLoading = false;
-      });
     }
   }
 

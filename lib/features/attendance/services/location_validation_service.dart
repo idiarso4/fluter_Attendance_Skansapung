@@ -1,10 +1,26 @@
 import 'package:geolocator/geolocator.dart';
 
+class LocationValidationResult {
+  final bool isValid;
+  final double? distance;
+  final String? error;
+
+  LocationValidationResult({required this.isValid, this.distance, this.error});
+}
+
 class LocationValidationService {
   static const double _defaultRadius = 100.0; // meters
 
-  Future<bool> validateLocation(Position userLocation, Map<String, double> targetLocation) async {
+  Future<LocationValidationResult> validateLocation(Position userLocation, Map<String, double> targetLocation) async {
     try {
+      // Validate input parameters
+      if (!targetLocation.containsKey('latitude') || !targetLocation.containsKey('longitude')) {
+        return LocationValidationResult(
+          isValid: false,
+          error: 'Invalid target location coordinates',
+        );
+      }
+
       // Calculate distance between user and target location
       final distance = Geolocator.distanceBetween(
         userLocation.latitude,
@@ -14,11 +30,17 @@ class LocationValidationService {
       );
 
       // Check if user is within allowed radius
-      return distance <= _defaultRadius;
+      return LocationValidationResult(
+        isValid: distance <= _defaultRadius,
+        distance: distance,
+      );
     } catch (e) {
       // Log error with relevant details while protecting sensitive data
       print('Location validation error: ${e.toString()} - Validation failed for coordinates check');
-      return false;
+      return LocationValidationResult(
+        isValid: false,
+        error: 'Failed to validate location',
+      );
     }
   }
 
@@ -29,19 +51,24 @@ class LocationValidationService {
   }
 
   Future<bool> isLocationEnabled() async {
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return false;
-    }
-
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
+    try {
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
         return false;
       }
-    }
 
-    return permission != LocationPermission.deniedForever;
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          return false;
+        }
+      }
+
+      return permission != LocationPermission.deniedForever;
+    } catch (e) {
+      print('Location service error: ${e.toString()}');
+      return false;
+    }
   }
 }

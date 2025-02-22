@@ -20,19 +20,24 @@ class AuthService {
         'password': password,
       });
 
-      if (response.statusCode == 200) {
-        final token = response.data['token'];
-        final userData = response.data['user'];
-        
-        await Future.wait([
-          _storage.write(key: _tokenKey, value: token),
-          _storage.write(key: _userKey, value: userData.toString()),
-        ]);
-      } else {
-        throw Exception('Login failed: ${response.statusMessage}');
+      final token = response.data['token'];
+      final userData = response.data['user'];
+      
+      if (token == null) {
+        throw Exception('Invalid server response: missing token');
       }
+      
+      await Future.wait([
+        _storage.write(key: _tokenKey, value: token),
+        _storage.write(key: _userKey, value: userData.toString()),
+      ]);
     } on DioException catch (e) {
-      throw Exception('Login failed: ${e.message}');
+      if (e.response?.statusCode == 401) {
+        throw Exception('Invalid email or password');
+      } else if (e.response?.statusCode == 403) {
+        throw Exception('Account is locked. Please contact support');
+      }
+      throw Exception(e.response?.data?['message'] ?? 'Login failed: ${e.message}');
     } catch (e) {
       throw Exception('An unexpected error occurred');
     }

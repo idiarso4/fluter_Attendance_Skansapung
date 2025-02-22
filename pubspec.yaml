@@ -33,6 +33,7 @@ dependencies:
   flutter_bloc: ^9.0.0
   equatable: ^2.0.5
   package_info_plus: ^4.1.0
+  get: ^4.6.6
 
 dev_dependencies:
   flutter_test:

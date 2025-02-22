@@ -4,9 +4,9 @@ class DioClient {
   final Dio _dio;
 
   DioClient() : _dio = Dio() {
-    _dio.options.baseUrl = 'http://localhost:8000';
-    _dio.options.connectTimeout = const Duration(seconds: 5);
-    _dio.options.receiveTimeout = const Duration(seconds: 3);
+    _dio.options.baseUrl = 'https://api.sijasmkn1punggelan.org';
+    _dio.options.connectTimeout = const Duration(seconds: 15);
+    _dio.options.receiveTimeout = const Duration(seconds: 15);
     _dio.options.headers = {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
@@ -14,14 +14,28 @@ class DioClient {
     _dio.options.validateStatus = (status) {
       return status != null && status < 500;
     };
+
+    // Add certificate validation options
+    _dio.options.followRedirects = true;
+    _dio.options.validateStatus = (status) {
+      return status != null && status < 500;
+    };
+
     _dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) {
+        print('Making request to: ${options.uri}');
         return handler.next(options);
       },
+      onResponse: (response, handler) {
+        print('Received response: ${response.statusCode}');
+        return handler.next(response);
+      },
       onError: (error, handler) {
+        print('Request error: ${error.message}');
         if (error.response?.statusCode == 401) {
-          // Handle unauthorized access
           throw Exception('Unauthorized access. Please login again.');
+        } else if (error.response?.statusCode == 404) {
+          throw Exception('API endpoint not found. Please check the URL or contact support.');
         }
         return handler.next(error);
       },

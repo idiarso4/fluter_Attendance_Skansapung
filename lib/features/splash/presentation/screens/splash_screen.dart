@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:absensi_app/features/auth/presentation/screens/login_screen.dart';
+import 'package:get/get.dart';
+import 'package:absensi_app/config/app_pages.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -27,12 +28,9 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
     _controller.forward();
 
-    // Navigate to login screen after 3 seconds
+    // Navigate to login screen after 3 seconds using GetX
     Future.delayed(const Duration(seconds: 3), () {
-      if (!mounted) return;
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const LoginScreen()),
-      );
+      Get.offAllNamed(Routes.LOGIN);
     });
   }
 
@@ -49,42 +47,10 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       body: Center(
         child: FadeTransition(
           opacity: _animation,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                height: 150,
-                width: 150,
-                decoration: BoxDecoration(
-                  color: Colors.blue.shade50,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.school,
-                  size: 80,
-                  color: Theme.of(context).primaryColor,
-                ),
-              ),
-              const SizedBox(height: 24),
-              Text(
-                'SMKN 1 Punggelan',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).primaryColor,
-                ),
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                'Sistem Absensi Digital',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey,
-                ),
-              ),
-              const SizedBox(height: 32),
-              const CircularProgressIndicator(),
-            ],
+          child: Image.asset(
+            'assets/images/logo.png',
+            width: 200,
+            height: 200,
           ),
         ),
       ),

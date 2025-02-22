@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:absensi_app/config/app_pages.dart';
 
 class QuickActions extends StatelessWidget {
   const QuickActions({Key? key}) : super(key: key);
@@ -18,7 +20,7 @@ class QuickActions extends StatelessWidget {
           title: 'Take Attendance',
           color: Colors.blue,
           onTap: () {
-            // TODO: Navigate to attendance camera
+            Get.toNamed(Routes.attendance);
           },
         ),
         _buildActionCard(
@@ -27,7 +29,7 @@ class QuickActions extends StatelessWidget {
           title: 'History',
           color: Colors.green,
           onTap: () {
-            // TODO: Navigate to attendance history
+            Get.toNamed(Routes.history);
           },
         ),
         _buildActionCard(
@@ -36,7 +38,7 @@ class QuickActions extends StatelessWidget {
           title: 'Settings',
           color: Colors.purple,
           onTap: () {
-            // TODO: Navigate to settings
+            Get.toNamed(Routes.settings);
           },
         ),
         _buildActionCard(
@@ -45,7 +47,7 @@ class QuickActions extends StatelessWidget {
           title: 'Help',
           color: Colors.orange,
           onTap: () {
-            // TODO: Navigate to help section
+            Get.toNamed(Routes.help);
           },
         ),
       ],
@@ -73,8 +75,8 @@ class QuickActions extends StatelessWidget {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                color.withOpacity(0.8),
-                color.withOpacity(0.6),
+                color.withAlpha(204), // 0.8 opacity
+                color.withAlpha(153), // 0.6 opacity
               ],
             ),
           ),

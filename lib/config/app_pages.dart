@@ -7,27 +7,42 @@ import 'package:absensi_app/features/attendance/presentation/screens/attendance_
 part 'app_routes.dart';
 
 class AppPages {
-  static const INITIAL = Routes.SPLASH;
+  static const initial = Routes.splash;
 
   static final routes = [
     GetPage(
-      name: Routes.SPLASH,
+      name: Routes.splash,
       page: () => const SplashScreen(),
       transition: Transition.fade,
     ),
     GetPage(
-      name: Routes.LOGIN,
+      name: Routes.login,
       page: () => const LoginScreen(),
       transition: Transition.rightToLeft,
     ),
     GetPage(
-      name: Routes.HOME,
+      name: Routes.home,
       page: () => const HomeScreen(),
       transition: Transition.rightToLeft,
     ),
     GetPage(
-      name: Routes.ATTENDANCE,
+      name: Routes.attendance,
       page: () => const AttendanceScreen(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: Routes.history,
+      page: () => const AttendanceScreen(), // Temporary placeholder
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: Routes.settings,
+      page: () => const AttendanceScreen(), // Temporary placeholder
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: Routes.help,
+      page: () => const AttendanceScreen(), // Temporary placeholder
       transition: Transition.rightToLeft,
     ),
   ];

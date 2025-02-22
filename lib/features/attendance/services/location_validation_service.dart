@@ -1,4 +1,5 @@
 import 'package:geolocator/geolocator.dart';
+import 'package:logging/logging.dart';
 
 class LocationValidationResult {
   final bool isValid;
@@ -10,6 +11,7 @@ class LocationValidationResult {
 
 class LocationValidationService {
   static const double _defaultRadius = 100.0; // meters
+  final _logger = Logger('LocationValidationService');
 
   Future<LocationValidationResult> validateLocation(Position userLocation, Map<String, double> targetLocation) async {
     try {
@@ -36,7 +38,7 @@ class LocationValidationService {
       );
     } catch (e) {
       // Log error with relevant details while protecting sensitive data
-      print('Location validation error: ${e.toString()} - Validation failed for coordinates check');
+      _logger.warning('Location validation error: ${e.toString()} - Validation failed for coordinates check');
       return LocationValidationResult(
         isValid: false,
         error: 'Failed to validate location',
@@ -67,7 +69,7 @@ class LocationValidationService {
 
       return permission != LocationPermission.deniedForever;
     } catch (e) {
-      print('Location service error: ${e.toString()}');
+      _logger.warning('Location service error: ${e.toString()}');
       return false;
     }
   }

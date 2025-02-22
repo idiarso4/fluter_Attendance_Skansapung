@@ -59,7 +59,7 @@ class LoginScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 24),
                 Obx(() => ElevatedButton(
-                  onPressed: controller.isLoading.value
+                  onPressed: controller.isLoading
                     ? null
                     : () {
                         if (formKey.currentState!.validate()) {
@@ -71,7 +71,7 @@ class LoginScreen extends StatelessWidget {
                       },
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: controller.isLoading.value
+                    child: controller.isLoading
                       ? const CircularProgressIndicator()
                       : const Text('Login'),
                   ),

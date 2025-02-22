@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../features/core/presentation/transitions/smooth_page_transition.dart';
+import 'package:get/get.dart';
 import '../../../attendance/presentation/screens/attendance_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -10,7 +10,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
-  int _selectedIndex = 0;
+  final int _selectedIndex = 0;
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -66,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       default:
         targetScreen = const AttendanceScreen(); // Placeholder for other screens
     }
-    SmoothNavigator.navigateTo(context, targetScreen);
+    Get.to(() => targetScreen);
   }
 
   @override
